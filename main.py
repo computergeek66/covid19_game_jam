@@ -165,7 +165,7 @@ def main():
                         if(line[i] == 'V'):
                             enemy_type = "vb"
                         if(enemy_type != ""):
-                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), 0, PLAYWIDTH)
+                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), -64, PLAYWIDTH)
                             enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
