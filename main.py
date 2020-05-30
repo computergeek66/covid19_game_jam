@@ -40,6 +40,10 @@ scoreLabelDisplay = None
 scoreLabelDisplayRect = None
 scoreDisplay = None
 scoreDisplayRect = None
+healthLabelDisplay = None
+healthLabelDisplayRect = None
+healthDisplay = None
+healthDisplayRect = None
 
 
 pygame.display.set_caption("COVID-19 Game")
@@ -49,6 +53,11 @@ def create_GUI():
     global scoreLabelDisplayRect
     global scoreDisplay
     global scoreDisplayRect
+    global healthLabelDisplay
+    global healthLabelDisplayRect
+    global healthDisplay
+    global healthDisplayRect
+
     
     scoreLabelDisplay = DISPLAYFONT.render("SCORE", True, WHITE, BLACK)
     scoreLabelDisplayRect = scoreLabelDisplay.get_rect()
@@ -59,18 +68,35 @@ def create_GUI():
     scoreDisplayRect = scoreDisplay.get_rect()
     scoreDisplayRect.centerx =  scoreLabelDisplayRect.centerx
     scoreDisplayRect.y = scoreLabelDisplayRect.height
+
+    healthLabelDisplay = DISPLAYFONT.render("HEALTH", True, WHITE, BLACK)
+    healthLabelDisplayRect = healthLabelDisplay.get_rect()
+    healthLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH * 0.2)
+    healthLabelDisplayRect.y = 50
+
+    healthDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
+    healthDisplayRect = healthDisplay.get_rect()
+    healthDisplayRect.centerx = healthLabelDisplayRect.centerx
+    healthDisplayRect.y = healthLabelDisplayRect.y+healthLabelDisplayRect.height
     
 def update_GUI():
     global scoreLabelDisplay
     global scoreLabelDisplayRect
     global scoreDisplay
     global scoreDisplayRect
+    global healthLabelDisplay
+    global healthLabelDisplayRect
+    global healthDisplay
+    global healthDisplayRect
     global points
     
 
     scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
+    healthDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
     DISPLAYSURF.blit(scoreLabelDisplay, scoreLabelDisplayRect)
     DISPLAYSURF.blit(scoreDisplay, scoreDisplayRect)
+    DISPLAYSURF.blit(healthLabelDisplay, healthLabelDisplayRect)
+    DISPLAYSURF.blit(healthDisplay, healthDisplayRect)
 
 def game_over():
     print("Game over")
@@ -167,7 +193,7 @@ def main():
                         if(line[i] == 'V'):
                             enemy_type = "vb"
                         if(enemy_type != ""):
-                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), 0, PLAYWIDTH)
+                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), -64, PLAYWIDTH)
                             enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
