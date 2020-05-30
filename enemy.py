@@ -33,13 +33,13 @@ class Enemy:
 
         if(self.e_type == "wb"):
             sprites= []
-            for sprite in VB_SPRITES:
+            for sprite in WB_DEATH:
                 sprites.append(pygame.image.load(sprite))
             self.sprite = sprites[0]
             self.speed = 6
-            self.drawable = Drawable.animated_drawable(self.sprite, sprites, x, y)
+            self.drawable = Drawable.animated_drawable(sprites[0], sprites, x, y)
             
-            self.health = 5
+            self.health = 1
 
         if(self.e_type == "cb"):
             self.sprite = pygame.image.load(CB_SPRITE)
@@ -68,19 +68,21 @@ class Enemy:
 
         if(self.e_type == "vb"):
             self.drawable.animate()
-
-        if(self.dying):
-            if(self.drawable.animate()):
-                self.health = -99
+        else:
+            if(self.dying):
+                if(self.drawable.animate()):
+                    self.health = -99
 
     def take_damage(self, damage):
         dead = False
-        self.health -= damage
+        
         if(self.health <= 0):
             dead = True
-            if(self.e_type = "wb"):
+            if(self.e_type == "wb"):
                 self.dying = True
-                self.drawable.initialize_animation(10,0)
+                self.drawable.initialize_animation(5,0)
+        else:
+            self.health -= damage
         return dead
             
 

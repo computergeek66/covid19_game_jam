@@ -183,8 +183,7 @@ def main():
                             else:
                                 Sound.play_sound("allydamage")
                                 points -= 100
-                            drawables.remove(enemy.drawable)
-                            enemies.remove(enemy)
+                            
                             
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
@@ -229,6 +228,9 @@ def main():
                     points += 100
                 else:
                     points -= 100
+                drawables.remove(enemy.drawable)
+                enemies.remove(enemy)
+            if(enemy.health < 0):
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
                 
