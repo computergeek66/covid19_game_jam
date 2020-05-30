@@ -19,7 +19,7 @@ DISPLAYWIDTH = DISPLAYSURF.get_width()
 
 pygame.display.set_caption("We have Galaga at home!")
 
-BLACK = (0, 0, 0)
+BG_COLOR = (136, 0, 21)
 
 
 def main():
@@ -27,6 +27,8 @@ def main():
 
     global blockRect
     
+    blockRect.x = 0.5 * DISPLAYWIDTH
+    blockRect.y = 0.8 * DISPLAYHEIGHT
 
     while True:
         for event in pygame.event.get():
@@ -34,18 +36,18 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        ##Fill the frame with black
-        DISPLAYSURF.fill(BLACK)
+        ##Fill the frame with background color
+        DISPLAYSURF.fill(BG_COLOR)
 
         keys = pygame.key.get_pressed()
 
-        if keys[K_a]:
+        if keys[K_a] and blockRect.x > (0):
             blockRect.x -= PLAYER_SPEED
-        if keys[K_d]:
+        if keys[K_d] and blockRect.x <= (DISPLAYWIDTH - block.get_width()):
             blockRect.x += PLAYER_SPEED
-        if keys[K_w]:
+        if keys[K_w] and blockRect.y > DISPLAYHEIGHT / 2:
             blockRect.y -= PLAYER_SPEED
-        if keys[K_s]:
+        if keys[K_s] and blockRect.y <= (DISPLAYHEIGHT - block.get_height()):
             blockRect.y += PLAYER_SPEED
 
         DISPLAYSURF.blit(block, (blockRect.x,blockRect.y))
