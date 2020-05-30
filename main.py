@@ -27,7 +27,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BULLET_SPRITE = pygame.image.load("sprites/bullet.png")
 BULLET_SPEED = 12
-SHOOT_TICKER_MAX = 8
+SHOOT_TICKER_MAX = 30
 TICK_COUNTER_MAX = 30
 
 
@@ -136,6 +136,9 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    shoot_ticker = 0
 
         ##Fill the frame with background color
         DISPLAYSURF.fill(BG_COLOR)
@@ -157,12 +160,13 @@ def main():
 
         #bullet generation logic
         if(keys[K_SPACE] and shoot_ticker == 0):
+            Sound.play_sound("shoot")
             shoot_ticker = SHOOT_TICKER_MAX
             bullet_x = (int)(((player.drawable.rect.x * 2) + player.drawable.sprite.get_width() - BULLET_SPRITE.get_width()) / 2)
             bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE.get_height() / 2)
             bullet = Drawable(BULLET_SPRITE, bullet_x, bullet_y)
             bullets.append(bullet)
-            Sound.play_sound("shoot")
+            
         
         for bullet in bullets:
             bullet.rect.y -= BULLET_SPEED
