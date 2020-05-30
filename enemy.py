@@ -3,6 +3,7 @@ from pygame.locals import *
 from drawable import Drawable
 
 RB_SPRITE = "sprites/rb.png"
+WB_SPRITE = "sprites/wb.png"
 
 class Enemy:
     def __init__(self, e_type, x, y):
@@ -13,7 +14,7 @@ class Enemy:
             self.sprite = pygame.image.load(RB_SPRITE)
             self.speed = 3
 
-        if(self.e_type = "wb"):
+        if(self.e_type == "wb"):
             self.sprite = pygame.image.load(WB_SPRITE)
             self.speed = 4
 
