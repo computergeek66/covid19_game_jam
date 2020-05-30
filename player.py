@@ -11,6 +11,7 @@ class Player:
         self.drawable = Drawable(pygame.image.load(PLAYER_SPRITE), (int)(0.5 * displayWidth), (int)(0.8 * displayHeight))
         self.displayWidth = displayWidth
         self.displayHeight = displayHeight
+        self.health = 10
     
     def move_player(self, keys):
         if keys[K_a] and self.drawable.rect.x > (0):
@@ -21,3 +22,10 @@ class Player:
             self.drawable.rect.y -= PLAYER_SPEED
         if keys[K_s] and self.drawable.rect.y <= (self.displayHeight - self.drawable.sprite.get_height()):
             self.drawable.rect.y += PLAYER_SPEED
+    
+    def take_damage(self, damage):
+        dead = False
+        self.health -= damage
+        if(self.health <= 0):
+            dead = True
+        return dead

@@ -34,6 +34,9 @@ enemies = []
 pygame.init()
 pygame.display.set_caption("COVID-19 Game")
 
+def game_over():
+    print("Game over")
+
 def main():
     fpsClock = pygame.time.Clock()
     shoot_ticker = 0
@@ -81,6 +84,13 @@ def main():
             bullet.rect.y -= BULLET_SPEED
             if(bullet.rect.y < 0 - bullet.sprite.get_height()):
                 bullets.remove(bullet)
+            else:
+                for enemy in enemies:
+                    if(bullet.rect.colliderect(enemy.drawable.rect)):
+                        bullets.remove(bullet)
+                        if(enemy.take_damage(1)):
+                            drawables.remove(enemy.drawable)
+                            enemies.remove(enemy)
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
         #level generation logic
@@ -105,7 +115,8 @@ def main():
                         if(line[i] == 'V'):
                             enemy_type = "vb"
                         if(enemy_type != ""):
-                            enemy = Enemy(enemy_type, (int)(DISPLAYWIDTH / len(line)) * i, 0)
+                            enemy = Enemy(enemy_type, (int)(DISPLAYWIDTH / (len(line) + 1)) * (i + 1), 0)
+                            enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
                 current_level_line += 1
@@ -116,6 +127,11 @@ def main():
 
         for enemy in enemies:
             enemy.update()
+            if(player.drawable.rect.colliderect(enemy.drawable.rect)):
+                if(player.take_damage(1)):
+                    game_over()
+                drawables.remove(enemy.drawable)
+                enemies.remove(enemy)
 
         for drawable in drawables:
             DISPLAYSURF.blit(drawable.sprite, drawable.rect)
