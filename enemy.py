@@ -37,7 +37,7 @@ class Enemy:
 
         if(self.e_type == "vb"):
             self.sprite = pygame.image.load(VB_SPRITES[0])
-            self.speed = 4
+            self.speed = 4*random.uniform(-1.5, 1.5)
             self.drawable = Drawable(self.sprite, x, y)
             self.health = 99
 
