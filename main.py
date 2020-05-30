@@ -14,9 +14,12 @@ DISPLAYSURF = pygame.display.set_mode((400, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
 BG_COLOR = (136, 0, 21)
+BULLET_SPRITE = pygame.image.load("sprites/block.png")
+BULLET_SPEED = 6
 
 bg_tiles = []
 player = Player(DISPLAYWIDTH, DISPLAYHEIGHT)
+bullets = []
 
 pygame.init()
 pygame.display.set_caption("COVID-19 Game")
@@ -48,6 +51,18 @@ def main():
         keys = pygame.key.get_pressed()
         player.move_player(keys)
         DISPLAYSURF.blit(player.drawable.sprite, player.drawable.rect)
+
+        if(keys[K_SPACE]):
+            bullet_x = (int)(((player.drawable.rect.x * 2) + player.drawable.sprite.get_width() - BULLET_SPRITE.get_width()) / 2)
+            bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE.get_height() / 2)
+            bullet = Drawable(BULLET_SPRITE, bullet_x, bullet_y)
+            bullets.append(bullet)
+        
+        for bullet in bullets:
+            bullet.rect.y -= BULLET_SPEED
+            if(bullet.rect.y < 0 - bullet.sprite.get_height()):
+                bullets.remove(bullet)
+            DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
         pygame.display.update()
         fpsClock.tick(FPS)
