@@ -15,7 +15,7 @@ class Enemy:
         self.drawable = Drawable(self.sprite, x, y)
     
 
-    def update(self):
+    def update(self): 
         if(self.e_type == "rb"):
             self.drawable.rect.y += self.speed
 
