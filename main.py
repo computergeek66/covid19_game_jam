@@ -15,7 +15,7 @@ DISPLAYSURF = pygame.display.set_mode((400, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
 BG_COLOR = (140, 0, 21)
-BULLET_SPRITE = pygame.image.load("sprites/block.png")
+BULLET_SPRITE = pygame.image.load("sprites/bullet.png")
 BULLET_SPEED = 10
 SHOOT_TICKER_MAX = 8
 TICK_COUNTER_MAX = 30
@@ -50,7 +50,7 @@ def main():
     tick_counter = 0
     current_level_line = 0
 
-    for i in range(30):
+    for i in range(40):
         bg_tile_sprite = random.choice(BG_SPRITES)
         bg_tile = Drawable(bg_tile_sprite, random.randrange(DISPLAYWIDTH), random.randrange(DISPLAYHEIGHT))
         bg_tiles.append(bg_tile)
@@ -69,6 +69,7 @@ def main():
             bg_tile.rect.y += 7
             if(bg_tile.rect.y > DISPLAYHEIGHT):
                 bg_tile.rect.y = -bg_tile.sprite.get_height()
+                bg_tile.rect.x = random.randrange(DISPLAYWIDTH)
             DISPLAYSURF.blit(bg_tile.sprite, bg_tile.rect)
 
         #detect player movement
