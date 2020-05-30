@@ -2,6 +2,7 @@ import pygame, sys, random
 from pygame.locals import *
 from drawable import Drawable
 from player import Player
+from enemy import Enemy
 
 #constants
 FPS=60
@@ -13,7 +14,7 @@ BG_SPRITES = [pygame.image.load("sprites/background/bg1.png"),
 DISPLAYSURF = pygame.display.set_mode((400, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
-BG_COLOR = (136, 0, 21)
+BG_COLOR = (140, 0, 21)
 BULLET_SPRITE = pygame.image.load("sprites/block.png")
 BULLET_SPEED = 10
 SHOOT_TICKER_MAX = 8
@@ -21,6 +22,12 @@ SHOOT_TICKER_MAX = 8
 bg_tiles = []
 player = Player(DISPLAYWIDTH, DISPLAYHEIGHT)
 bullets = []
+drawables = []
+enemies = []
+
+enemy = Enemy("rb", 200, 0)
+drawables.append(enemy.drawable)
+enemies.append(enemy)
 
 pygame.init()
 pygame.display.set_caption("COVID-19 Game")
@@ -29,7 +36,7 @@ def main():
     fpsClock = pygame.time.Clock()
     shoot_ticker = 0
 
-    for i in range(5):
+    for i in range(30):
         bg_tile_sprite = random.choice(BG_SPRITES)
         bg_tile = Drawable(bg_tile_sprite, random.randrange(DISPLAYWIDTH), random.randrange(DISPLAYHEIGHT))
         bg_tiles.append(bg_tile)
@@ -44,7 +51,7 @@ def main():
         DISPLAYSURF.fill(BG_COLOR)
 
         for bg_tile in bg_tiles:
-            bg_tile.rect.y += 1
+            bg_tile.rect.y += 7
             if(bg_tile.rect.y > DISPLAYHEIGHT):
                 bg_tile.rect.y = -bg_tile.sprite.get_height()
             DISPLAYSURF.blit(bg_tile.sprite, bg_tile.rect)
@@ -66,6 +73,12 @@ def main():
             if(bullet.rect.y < 0 - bullet.sprite.get_height()):
                 bullets.remove(bullet)
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
+
+        for enemy in enemies:
+            enemy.update()
+
+        for drawable in drawables:
+            DISPLAYSURF.blit(drawable.sprite, drawable.rect)
 
         if shoot_ticker > 0:
             shoot_ticker -= 1
