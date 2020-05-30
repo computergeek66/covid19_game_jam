@@ -4,7 +4,7 @@ from drawable import Drawable
 
 #constants
 PLAYER_SPRITE = "sprites/player.png"
-PLAYER_SPEED = 5
+PLAYER_SPEED = 7
 
 class Player:
     def __init__(self, displayWidth, displayHeight):

@@ -10,13 +10,12 @@ pygame.init()
 
 #constants
 FPS=60
-PLAYER_SPEED = 5
 DISPLAYFONT = pygame.font.Font("fonts/arial.ttf", 15)
 BG_SPRITES = [pygame.image.load("sprites/background/bg1.png"),
               pygame.image.load("sprites/background/bg2.png"),
               pygame.image.load("sprites/background/bg3.png"),
               pygame.image.load("sprites/background/bg4.png")]
-DISPLAYSURF = pygame.display.set_mode((650, 600))
+DISPLAYSURF = pygame.display.set_mode((550, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
 GUIWIDTH = 150
@@ -25,7 +24,7 @@ BG_COLOR = (140, 0, 21)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BULLET_SPRITE = pygame.image.load("sprites/bullet.png")
-BULLET_SPEED = 10
+BULLET_SPEED = 12
 SHOOT_TICKER_MAX = 8
 TICK_COUNTER_MAX = 30
 
@@ -52,7 +51,7 @@ def create_GUI():
     
     scoreLabelDisplay = DISPLAYFONT.render("SCORE", True, WHITE, BLACK)
     scoreLabelDisplayRect = scoreLabelDisplay.get_rect()
-    scoreLabelDisplayRect.centerx =  PLAYWIDTH + GUIWIDTH * 0.2
+    scoreLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH * 0.2)
     scoreLabelDisplayRect.y = 0
     
     scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
@@ -166,7 +165,7 @@ def main():
                         if(line[i] == 'V'):
                             enemy_type = "vb"
                         if(enemy_type != ""):
-                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), 0)
+                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), 0, PLAYWIDTH)
                             enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
