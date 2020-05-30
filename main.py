@@ -6,7 +6,9 @@ from drawable import Drawable
 FPS=60
 PLAYER_SPEED = 5
 BG_SPRITES = [pygame.image.load("sprites/background/bg1.png"),
-              pygame.image.load("sprites/background/bg2.png")]
+              pygame.image.load("sprites/background/bg2.png"),
+              pygame.image.load("sprites/background/bg3.png"),
+              pygame.image.load("sprites/background/bg4.png")]
 DISPLAYSURF = pygame.display.set_mode((400, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
