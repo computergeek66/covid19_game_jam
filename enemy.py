@@ -45,10 +45,10 @@ class Enemy:
     def update(self): 
         self.drawable.rect.y += self.speed
 
-    def bool take_damage(self, damage)
+    def take_damage(self, damage):
         dead = False
         self.health -= damage
-        if(self.health <= 0)
+        if(self.health <= 0):
             dead = True
         return dead
             
