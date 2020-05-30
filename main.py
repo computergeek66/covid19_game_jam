@@ -1,6 +1,7 @@
 import pygame, sys, random
 from pygame.locals import *
 from drawable import Drawable
+from player import Player
 
 #constants
 FPS=60
@@ -15,7 +16,7 @@ DISPLAYWIDTH = DISPLAYSURF.get_width()
 BG_COLOR = (136, 0, 21)
 
 bg_tiles = []
-block = Drawable(pygame.image.load("sprites/block.png"), (int)(0.5 * DISPLAYWIDTH), (int)(0.8 * DISPLAYHEIGHT))
+player = Player(DISPLAYWIDTH, DISPLAYHEIGHT)
 
 pygame.init()
 pygame.display.set_caption("COVID-19 Game")
@@ -45,16 +46,8 @@ def main():
 
         #detect player input
         keys = pygame.key.get_pressed()
-        if keys[K_a] and block.rect.x > (0):
-            block.rect.x -= PLAYER_SPEED
-        if keys[K_d] and block.rect.x <= (DISPLAYWIDTH - block.sprite.get_width()):
-            block.rect.x += PLAYER_SPEED
-        if keys[K_w] and block.rect.y > DISPLAYHEIGHT / 2:
-            block.rect.y -= PLAYER_SPEED
-        if keys[K_s] and block.rect.y <= (DISPLAYHEIGHT - block.sprite.get_height()):
-            block.rect.y += PLAYER_SPEED
-
-        DISPLAYSURF.blit(block.sprite, block.rect)
+        player.move_player(keys)
+        DISPLAYSURF.blit(player.drawable.sprite, player.drawable.rect)
 
         pygame.display.update()
         fpsClock.tick(FPS)
