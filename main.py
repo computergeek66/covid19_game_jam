@@ -3,6 +3,7 @@ from pygame.locals import *
 from drawable import Drawable
 from player import Player
 from enemy import Enemy
+from levels import *
 
 #constants
 FPS=60
@@ -26,16 +27,6 @@ bullets = []
 drawables = []
 enemies = []
 
-level = ['P2',
-        'R-------',
-        '-R------',
-        '--R-----',
-        '---R----',
-        '----R---',
-        '-----R--',
-        '------R-',
-        '-------R']
-
 #enemy = Enemy("rb", 200, 0)
 #drawables.append(enemy.drawable)
 #enemies.append(enemy)
@@ -49,6 +40,7 @@ def main():
     pause_counter = 0
     tick_counter = 0
     current_level_line = 0
+    current_level = LEVEL1
 
     for i in range(40):
         bg_tile_sprite = random.choice(BG_SPRITES)
@@ -92,13 +84,13 @@ def main():
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
         #level generation logic
-        if(current_level_line >= len(level)): 
+        if(current_level_line >= len(current_level)): 
             current_level_line = 0
-        if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(level)):
+        if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(current_level)):
             tick_counter = 0
             if(pause_counter == 0):
                 #parse line
-                line = list(level[current_level_line])
+                line = list(current_level[current_level_line])
                 if(line[0] == 'P'):
                     pause_counter = int(line[1])
                 else:
@@ -108,7 +100,7 @@ def main():
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
                         if(line[i] == 'W'):
-                            enemy = Enemy("rb", (int)(DISPLAYWIDTH / 8) * i, 0)
+                            enemy = Enemy("wb", (int)(DISPLAYWIDTH / 8) * i, 0)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
                 current_level_line += 1
