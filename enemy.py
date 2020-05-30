@@ -43,7 +43,6 @@ class Enemy:
                 sprites.append(pygame.image.load(sprite))
             self.sprite = sprites[0]
             self.speed = 4+random.uniform(-1.5, 2)
-            print(self.speed)
             self.drawable = Drawable.animated_drawable(sprites[0], sprites, x, y)
             self.drawable.initialize_animation(5,0)
             self.health = 99

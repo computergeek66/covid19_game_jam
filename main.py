@@ -12,6 +12,7 @@ pygame.init()
 #constants
 FPS=60
 DISPLAYFONT = pygame.font.Font("fonts/arial.ttf", 15)
+GAMEOVERFONT = pygame.font.Font("fonts/arial.ttf", 20)
 BG_SPRITES = [pygame.image.load("sprites/background/bg1.png"),
               pygame.image.load("sprites/background/bg2.png"),
               pygame.image.load("sprites/background/bg3.png"),
@@ -35,6 +36,7 @@ player = Player(PLAYWIDTH, DISPLAYHEIGHT)
 bullets = []
 drawables = []
 enemies = []
+game_over = False
 points = 0
 scoreLabelDisplay = None
 scoreLabelDisplayRect = None
@@ -44,6 +46,9 @@ healthLabelDisplay = None
 healthLabelDisplayRect = None
 healthDisplay = None
 healthDisplayRect = None
+gameOverDisplay = None
+gameOverDisplayRect = None
+
 
 
 pygame.display.set_caption("COVID-19 Game")
@@ -57,7 +62,8 @@ def create_GUI():
     global healthLabelDisplayRect
     global healthDisplay
     global healthDisplayRect
-
+    global gameOverDisplay
+    global gameOverDisplayRect
     
     scoreLabelDisplay = DISPLAYFONT.render("SCORE", True, WHITE, BLACK)
     scoreLabelDisplayRect = scoreLabelDisplay.get_rect()
@@ -78,6 +84,11 @@ def create_GUI():
     healthDisplayRect = healthDisplay.get_rect()
     healthDisplayRect.centerx = healthLabelDisplayRect.centerx
     healthDisplayRect.y = healthLabelDisplayRect.y+healthLabelDisplayRect.height
+
+    gameOverDisplay = GAMEOVERFONT.render("GAME OVER", True, WHITE, BLACK)
+    gameOverDisplayRect = gameOverDisplay.get_rect()
+    gameOverDisplayRect.centerx = (int)(PLAYWIDTH * 0.5)
+    gameOverDisplayRect.y = (int)(DISPLAYHEIGHT * 0.5)
     
 def update_GUI():
     global scoreLabelDisplay
@@ -88,8 +99,10 @@ def update_GUI():
     global healthLabelDisplayRect
     global healthDisplay
     global healthDisplayRect
+    global gameOverDisplay
+    global gameOverDisplayRect
     global points
-    
+    global game_over
 
     scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
     healthDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
@@ -97,11 +110,8 @@ def update_GUI():
     DISPLAYSURF.blit(scoreDisplay, scoreDisplayRect)
     DISPLAYSURF.blit(healthLabelDisplay, healthLabelDisplayRect)
     DISPLAYSURF.blit(healthDisplay, healthDisplayRect)
-
-def game_over():
-    print("Game over")
-    pygame.quit()
-    sys.exit()
+    if(game_over):
+        DISPLAYSURF.blit(gameOverDisplay, gameOverDisplayRect)
 
 def main():
     fpsClock = pygame.time.Clock()
@@ -112,6 +122,7 @@ def main():
     current_level = LEVEL1
 
     global points
+    global game_over
     
     create_GUI()
 
@@ -163,8 +174,10 @@ def main():
                         bullets.remove(bullet)
                         if(enemy.take_damage(1)):
                             if(enemy.e_type == "cb" or enemy.e_type == "vb"):
+                                Sound.play_sound("smallexplode")
                                 points += 100
                             else:
+                                Sound.play_sound("allydamage")
                                 points -= 100
                             drawables.remove(enemy.drawable)
                             enemies.remove(enemy)
@@ -207,13 +220,14 @@ def main():
             enemy.update()
             if(player.drawable.rect.colliderect(enemy.drawable.rect)):
                 if(player.take_damage(1)):
-                    game_over()
+                    game_over = True
                 if(enemy.e_type == "cb" or enemy.e_type == "vb"):
                     points += 100
                 else:
                     points -= 100
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
+                
 
         for drawable in drawables:
             DISPLAYSURF.blit(drawable.sprite, drawable.rect)
