@@ -95,12 +95,17 @@ def main():
                     pause_counter = int(line[1])
                 else:
                     for i in range(len(line)):
+                        enemy_type = ""
                         if(line[i] == 'R'):
-                            enemy = Enemy("rb", (int)(DISPLAYWIDTH / 8) * i, 0)
-                            drawables.append(enemy.drawable)
-                            enemies.append(enemy)
+                            enemy_type = "rb"
                         if(line[i] == 'W'):
-                            enemy = Enemy("wb", (int)(DISPLAYWIDTH / 8) * i, 0)
+                            enemy_type = "wb"
+                        if(line[i] == 'C'):
+                            enemy_type = "cb"
+                        if(line[i] == 'V'):
+                            enemy_type = "vb"
+                        if(enemy_type != ""):
+                            enemy = Enemy(enemy_type, (int)(DISPLAYWIDTH / len(line)) * i, 0)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
                 current_level_line += 1
