@@ -3,7 +3,7 @@ from pygame.locals import *
 from drawable import Drawable
 
 #constants
-PLAYER_SPRITE = "sprites/block.png"
+PLAYER_SPRITE = "sprites/player.png"
 PLAYER_SPEED = 5
 
 class Player:
