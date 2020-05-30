@@ -4,6 +4,7 @@ from drawable import Drawable
 from player import Player
 from enemy import Enemy
 from levels import *
+from sound import Sound
 
 #initialization of pygame
 pygame.init()
@@ -124,6 +125,7 @@ def main():
             bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE.get_height() / 2)
             bullet = Drawable(BULLET_SPRITE, bullet_x, bullet_y)
             bullets.append(bullet)
+            Sound.play_sound("shoot")
         
         for bullet in bullets:
             bullet.rect.y -= BULLET_SPEED
