@@ -13,11 +13,14 @@ class Enemy:
             self.sprite = pygame.image.load(RB_SPRITE)
             self.speed = 3
 
+        if(self.e_type = "wb"):
+            self.sprite = pygame.image.load(WB_SPRITE)
+            self.speed = 4
+
         self.drawable = Drawable(self.sprite, x, y)
     
 
     def update(self): 
-        if(self.e_type == "rb"):
-            self.drawable.rect.y += self.speed
+        self.drawable.rect.y += self.speed
 
             
