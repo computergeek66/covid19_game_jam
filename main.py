@@ -5,37 +5,77 @@ from player import Player
 from enemy import Enemy
 from levels import *
 
+#initialization of pygame
+pygame.init()
+
 #constants
 FPS=60
 PLAYER_SPEED = 5
+DISPLAYFONT = pygame.font.Font("fonts/arial.ttf", 15)
 BG_SPRITES = [pygame.image.load("sprites/background/bg1.png"),
               pygame.image.load("sprites/background/bg2.png"),
               pygame.image.load("sprites/background/bg3.png"),
               pygame.image.load("sprites/background/bg4.png")]
-DISPLAYSURF = pygame.display.set_mode((500, 600))
+DISPLAYSURF = pygame.display.set_mode((650, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
+GUIWIDTH = 150
+PLAYWIDTH = DISPLAYWIDTH - GUIWIDTH
 BG_COLOR = (140, 0, 21)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 BULLET_SPRITE = pygame.image.load("sprites/bullet.png")
 BULLET_SPEED = 10
 SHOOT_TICKER_MAX = 8
 TICK_COUNTER_MAX = 30
 
+
 bg_tiles = []
-player = Player(DISPLAYWIDTH, DISPLAYHEIGHT)
+player = Player(PLAYWIDTH, DISPLAYHEIGHT)
 bullets = []
 drawables = []
 enemies = []
+points = 0
+scoreLabelDisplay = None
+scoreLabelDisplayRect = None
+scoreDisplay = None
+scoreDisplayRect = None
 
-#enemy = Enemy("rb", 200, 0)
-#drawables.append(enemy.drawable)
-#enemies.append(enemy)
 
-pygame.init()
 pygame.display.set_caption("COVID-19 Game")
+
+def create_GUI():
+    global scoreLabelDisplay
+    global scoreLabelDisplayRect
+    global scoreDisplay
+    global scoreDisplayRect
+    
+    scoreLabelDisplay = DISPLAYFONT.render("SCORE", True, WHITE, BLACK)
+    scoreLabelDisplayRect = scoreLabelDisplay.get_rect()
+    scoreLabelDisplayRect.centerx =  PLAYWIDTH + GUIWIDTH * 0.2
+    scoreLabelDisplayRect.y = 0
+    
+    scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
+    scoreDisplayRect = scoreDisplay.get_rect()
+    scoreDisplayRect.centerx =  scoreLabelDisplayRect.centerx
+    scoreDisplayRect.y = scoreLabelDisplayRect.height
+    
+def update_GUI():
+    global scoreLabelDisplay
+    global scoreLabelDisplayRect
+    global scoreDisplay
+    global scoreDisplayRect
+    global points
+    
+
+    scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
+    DISPLAYSURF.blit(scoreLabelDisplay, scoreLabelDisplayRect)
+    DISPLAYSURF.blit(scoreDisplay, scoreDisplayRect)
 
 def game_over():
     print("Game over")
+    pygame.quit()
+    sys.exit()
 
 def main():
     fpsClock = pygame.time.Clock()
@@ -45,9 +85,13 @@ def main():
     current_level_line = 0
     current_level = LEVEL1
 
+    global points
+    
+    create_GUI()
+
     for i in range(40):
         bg_tile_sprite = random.choice(BG_SPRITES)
-        bg_tile = Drawable(bg_tile_sprite, random.randrange(DISPLAYWIDTH), random.randrange(DISPLAYHEIGHT))
+        bg_tile = Drawable(bg_tile_sprite, random.randrange(PLAYWIDTH), random.randrange(DISPLAYHEIGHT))
         bg_tiles.append(bg_tile)
 
     while True:
@@ -59,12 +103,14 @@ def main():
         ##Fill the frame with background color
         DISPLAYSURF.fill(BG_COLOR)
 
+        pygame.draw.rect(DISPLAYSURF, BLACK, ((PLAYWIDTH, 0), (GUIWIDTH, DISPLAYHEIGHT)))
+
         #draw background tiles
         for bg_tile in bg_tiles:
             bg_tile.rect.y += 7
             if(bg_tile.rect.y > DISPLAYHEIGHT):
                 bg_tile.rect.y = -bg_tile.sprite.get_height()
-                bg_tile.rect.x = random.randrange(DISPLAYWIDTH)
+                bg_tile.rect.x = random.randrange(PLAYWIDTH)
             DISPLAYSURF.blit(bg_tile.sprite, bg_tile.rect)
 
         #detect player movement
@@ -89,8 +135,13 @@ def main():
                     if(bullet.rect.colliderect(enemy.drawable.rect)):
                         bullets.remove(bullet)
                         if(enemy.take_damage(1)):
+                            if(enemy.e_type == "cb" or enemy.e_type == "vb"):
+                                points += 100
+                            else:
+                                points -= 100
                             drawables.remove(enemy.drawable)
                             enemies.remove(enemy)
+                            
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
         #level generation logic
@@ -115,7 +166,7 @@ def main():
                         if(line[i] == 'V'):
                             enemy_type = "vb"
                         if(enemy_type != ""):
-                            enemy = Enemy(enemy_type, (int)(DISPLAYWIDTH / (len(line) + 1)) * (i + 1), 0)
+                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), 0)
                             enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
                             drawables.append(enemy.drawable)
                             enemies.append(enemy)
@@ -130,6 +181,10 @@ def main():
             if(player.drawable.rect.colliderect(enemy.drawable.rect)):
                 if(player.take_damage(1)):
                     game_over()
+                if(enemy.e_type == "cb" or enemy.e_type == "vb"):
+                    points += 100
+                else:
+                    points -= 100
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
 
@@ -139,6 +194,7 @@ def main():
         if shoot_ticker > 0:
             shoot_ticker -= 1
 
+        update_GUI()
         pygame.display.update()
         fpsClock.tick(FPS)
 
