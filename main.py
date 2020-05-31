@@ -56,6 +56,17 @@ gameOverDisplay = None
 gameOverDisplayRect = None
 youWinDisplay = None
 youWinDisplayRect = None
+scoringGoodDisplay = None
+scoringGoodDisplayRect = None
+scoringBadDisplay = None
+scoringBadDisplayRect = None
+scoringVirusDisplay = None
+scoringVirusDisplayRect = None
+
+RB_GUI = pygame.image.load("sprites/rb_gui.png")
+WB_GUI = pygame.image.load("sprites/wb_gui.png")
+CB_GUI = pygame.image.load("sprites/cb_gui.png")
+VB_GUI =pygame.image.load("sprites/covid1.png")
 
 
 
@@ -78,21 +89,27 @@ def create_GUI():
     global gameOverDisplayRect
     global youWinDisplay
     global youWinDisplayRect
+    global scoringGoodDisplay
+    global scoringGoodDisplayRect
+    global scoringBadDisplay
+    global scoringBadDisplayRect
+    global scoringVirusDisplay
+    global scoringVirusDisplayRect
     
     scoreLabelDisplay = DISPLAYFONT.render("SCORE", True, WHITE, BLACK)
     scoreLabelDisplayRect = scoreLabelDisplay.get_rect()
-    scoreLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH * 0.2)
-    scoreLabelDisplayRect.y = 0
+    scoreLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH/2)
+    scoreLabelDisplayRect.y = 25
     
     scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
     scoreDisplayRect = scoreDisplay.get_rect()
     scoreDisplayRect.centerx =  scoreLabelDisplayRect.centerx
-    scoreDisplayRect.y = scoreLabelDisplayRect.height
+    scoreDisplayRect.y = scoreLabelDisplayRect.y+scoreLabelDisplayRect.height
 
     healthLabelDisplay = DISPLAYFONT.render("HEALTH", True, WHITE, BLACK)
     healthLabelDisplayRect = healthLabelDisplay.get_rect()
-    healthLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH * 0.2)
-    healthLabelDisplayRect.y = 50
+    healthLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH/2)
+    healthLabelDisplayRect.y = 75
 
     healthDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
     healthDisplayRect = healthDisplay.get_rect()
@@ -101,8 +118,8 @@ def create_GUI():
 
     levelLabelDisplay = DISPLAYFONT.render("LEVEL", True, WHITE, BLACK)
     levelLabelDisplayRect = levelLabelDisplay.get_rect()
-    levelLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH * 0.2)
-    levelLabelDisplayRect.y = 100
+    levelLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH/2)
+    levelLabelDisplayRect.y = 125
 
     levelDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
     levelDisplayRect = levelDisplay.get_rect()
@@ -118,6 +135,21 @@ def create_GUI():
     youWinDisplayRect = youWinDisplay.get_rect()
     youWinDisplayRect.centerx = (int)(PLAYWIDTH * 0.5)
     youWinDisplayRect.y = (int)(DISPLAYHEIGHT * 0.5)
+
+    scoringGoodDisplay = DISPLAYFONT.render("+50pts", True, WHITE, BLACK)
+    scoringGoodDisplayRect = scoringGoodDisplay.get_rect()
+    scoringGoodDisplayRect.centerx = PLAYWIDTH+GUIWIDTH/2
+    scoringGoodDisplayRect.y = DISPLAYHEIGHT/2 + 50
+
+    scoringBadDisplay = DISPLAYFONT.render("-100pts", True, WHITE, BLACK)
+    scoringBadDisplayRect = scoringBadDisplay.get_rect()
+    scoringBadDisplayRect.centerx = scoringGoodDisplayRect.centerx
+    scoringBadDisplayRect.y = scoringGoodDisplayRect.y + scoringGoodDisplayRect.height + CB_GUI.get_height()+ 16
+
+    scoringVirusDisplay = DISPLAYFONT.render("Avoid!", True, WHITE, BLACK)
+    scoringVirusDisplayRect = scoringVirusDisplay.get_rect()
+    scoringVirusDisplayRect.centerx = scoringBadDisplayRect.centerx
+    scoringVirusDisplayRect.y = scoringBadDisplayRect.y + scoringBadDisplayRect.height + WB_GUI.get_height() +16
     
 def update_GUI():
     global scoreLabelDisplay
@@ -136,6 +168,12 @@ def update_GUI():
     global gameOverDisplayRect
     global youWinDisplay
     global youWinDisplayRect
+    global scoringGoodDisplay
+    global scoringGoodDisplayRect
+    global scoringBadDisplay
+    global scoringBadDisplayRect
+    global scoringVirusDisplay
+    global scoringVirusDisplayRect
     global points
     global level
     global game_over
@@ -150,6 +188,15 @@ def update_GUI():
     DISPLAYSURF.blit(healthDisplay, healthDisplayRect)
     DISPLAYSURF.blit(levelLabelDisplay, levelLabelDisplayRect)
     DISPLAYSURF.blit(levelDisplay, levelDisplayRect)
+
+    DISPLAYSURF.blit(scoringGoodDisplay, scoringGoodDisplayRect)
+    DISPLAYSURF.blit(CB_GUI, (scoringGoodDisplayRect.centerx-(CB_GUI.get_width()/2), scoringGoodDisplayRect.y + scoringGoodDisplayRect.height))
+    DISPLAYSURF.blit(scoringBadDisplay, scoringBadDisplayRect)
+    DISPLAYSURF.blit(WB_GUI, (scoringBadDisplayRect.centerx-(WB_GUI.get_width()), scoringBadDisplayRect.y + scoringBadDisplayRect.height))
+    DISPLAYSURF.blit(RB_GUI, (scoringBadDisplayRect.centerx+(RB_GUI.get_width()), scoringBadDisplayRect.y + scoringBadDisplayRect.height))
+    DISPLAYSURF.blit(scoringVirusDisplay, scoringVirusDisplayRect)
+    DISPLAYSURF.blit(VB_GUI, (scoringVirusDisplayRect.centerx-(VB_GUI.get_width()/2), scoringVirusDisplayRect.y + scoringVirusDisplayRect.height))
+
     if(game_over):
         DISPLAYSURF.blit(gameOverDisplay, gameOverDisplayRect)
     if(you_win):
