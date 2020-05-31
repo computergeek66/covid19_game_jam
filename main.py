@@ -230,7 +230,7 @@ def main():
                     pause_counter -= 1
             else:
                 tick_counter += 1
-
+        #enemy collision
         for enemy in enemies:
             enemy.update()
             if(player.drawable.rect.colliderect(enemy.drawable.rect)):
