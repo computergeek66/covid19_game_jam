@@ -8,7 +8,7 @@ PLAYER_SPRITE = [pygame.image.load("sprites/player.png"),
                  pygame.image.load("sprites/player.png")]
 PLAYER_SPEED = 7
 MAX_HEALTH = 10
-DAMAGE_COUNTER_MAX = 60
+DAMAGE_COUNTER_MAX = 30
 
 class Player:
     def __init__(self, displayWidth, displayHeight):
@@ -41,6 +41,7 @@ class Player:
             self.drawable.sprite.fill((self.rstep,self.gstep,self.bstep), special_flags=pygame.BLEND_SUB)
             if(self.health <= 0):
                 Sound.play_sound("death")
+                Sound.stop_sound("level")
                 dead = True
             elif(self.health == 0.2 * MAX_HEALTH):
                 Sound.play_sound("lowhealth")
@@ -52,3 +53,10 @@ class Player:
         Sound.play_sound("heal")
         self.health = MAX_HEALTH
         self.drawable.sprite.fill((255,255,255), special_flags=pygame.BLEND_ADD)
+    
+    def reset_position(self):
+        self.health = MAX_HEALTH
+        self.drawable.sprite.fill((255,255,255), special_flags=pygame.BLEND_ADD)
+        self.drawable.rect.x = (int)(0.5 * self.displayWidth)
+        self.drawable.rect.y = (int)(0.8 * self.displayHeight)
+        

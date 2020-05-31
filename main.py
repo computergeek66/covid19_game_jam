@@ -37,7 +37,9 @@ bullets = []
 drawables = []
 enemies = []
 game_over = False
+you_win = False
 points = 0
+level = 1
 scoreLabelDisplay = None
 scoreLabelDisplayRect = None
 scoreDisplay = None
@@ -46,12 +48,18 @@ healthLabelDisplay = None
 healthLabelDisplayRect = None
 healthDisplay = None
 healthDisplayRect = None
+levelLabelDisplay = None
+levelLabelDisplayRect = None
+levelDisplay = None
+levelDisplayRect = None
 gameOverDisplay = None
 gameOverDisplayRect = None
+youWinDisplay = None
+youWinDisplayRect = None
 
 
 
-pygame.display.set_caption("COVID-19 Game")
+#pygame.display.set_caption("Antibody Blast!")
 
 def create_GUI():
     global scoreLabelDisplay
@@ -62,8 +70,14 @@ def create_GUI():
     global healthLabelDisplayRect
     global healthDisplay
     global healthDisplayRect
+    global levelLabelDisplay
+    global levelLabelDisplayRect
+    global levelDisplay
+    global levelDisplayRect
     global gameOverDisplay
     global gameOverDisplayRect
+    global youWinDisplay
+    global youWinDisplayRect
     
     scoreLabelDisplay = DISPLAYFONT.render("SCORE", True, WHITE, BLACK)
     scoreLabelDisplayRect = scoreLabelDisplay.get_rect()
@@ -85,10 +99,25 @@ def create_GUI():
     healthDisplayRect.centerx = healthLabelDisplayRect.centerx
     healthDisplayRect.y = healthLabelDisplayRect.y+healthLabelDisplayRect.height
 
+    levelLabelDisplay = DISPLAYFONT.render("LEVEL", True, WHITE, BLACK)
+    levelLabelDisplayRect = levelLabelDisplay.get_rect()
+    levelLabelDisplayRect.centerx = (int)(PLAYWIDTH + GUIWIDTH * 0.2)
+    levelLabelDisplayRect.y = 100
+
+    levelDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
+    levelDisplayRect = levelDisplay.get_rect()
+    levelDisplayRect.centerx = levelLabelDisplayRect.centerx
+    levelDisplayRect.y = levelLabelDisplayRect.y+levelLabelDisplayRect.height
+
     gameOverDisplay = GAMEOVERFONT.render("GAME OVER", True, WHITE, BLACK)
     gameOverDisplayRect = gameOverDisplay.get_rect()
     gameOverDisplayRect.centerx = (int)(PLAYWIDTH * 0.5)
     gameOverDisplayRect.y = (int)(DISPLAYHEIGHT * 0.5)
+
+    youWinDisplay = GAMEOVERFONT.render("YOU WIN", True, WHITE, BLACK)
+    youWinDisplayRect = youWinDisplay.get_rect()
+    youWinDisplayRect.centerx = (int)(PLAYWIDTH * 0.5)
+    youWinDisplayRect.y = (int)(DISPLAYHEIGHT * 0.5)
     
 def update_GUI():
     global scoreLabelDisplay
@@ -99,31 +128,48 @@ def update_GUI():
     global healthLabelDisplayRect
     global healthDisplay
     global healthDisplayRect
+    global levelLabelDisplay
+    global levelLabelDisplayRect
+    global levelDisplay
+    global levelDisplayRect
     global gameOverDisplay
     global gameOverDisplayRect
+    global youWinDisplay
+    global youWinDisplayRect
     global points
+    global level
     global game_over
+    global you_win
 
     scoreDisplay = DISPLAYFONT.render(str(points), True, WHITE, BLACK)
     healthDisplay = DISPLAYFONT.render(str(player.health), True, WHITE, BLACK)
+    levelDisplay = DISPLAYFONT.render(str(level), True, WHITE, BLACK)
     DISPLAYSURF.blit(scoreLabelDisplay, scoreLabelDisplayRect)
     DISPLAYSURF.blit(scoreDisplay, scoreDisplayRect)
     DISPLAYSURF.blit(healthLabelDisplay, healthLabelDisplayRect)
     DISPLAYSURF.blit(healthDisplay, healthDisplayRect)
+    DISPLAYSURF.blit(levelLabelDisplay, levelLabelDisplayRect)
+    DISPLAYSURF.blit(levelDisplay, levelDisplayRect)
     if(game_over):
         DISPLAYSURF.blit(gameOverDisplay, gameOverDisplayRect)
+    if(you_win):
+        DISPLAYSURF.blit(youWinDisplay, youWinDisplayRect)
 
 def main():
+    global points
+    global level
+    global game_over
+    global you_win
+    global enemies
+    global drawables
     fpsClock = pygame.time.Clock()
     shoot_ticker = 0
     pause_counter = 0
     tick_counter = 0
     current_level_line = 0
-    level_index = 0
-    current_level = LEVELS[level_index]
+    current_level = LEVELS[level-1]
 
-    global points
-    global game_over
+    
 
     Sound.play_loop("level")
     
@@ -157,52 +203,53 @@ def main():
             DISPLAYSURF.blit(bg_tile.sprite, bg_tile.rect)
 
         #detect player movement
-        keys = pygame.key.get_pressed()
-        player.move_player(keys)
-        
+        if(not game_over and not you_win):
+            keys = pygame.key.get_pressed()
+            player.move_player(keys)
 
-        #bullet generation logic
-        if(keys[K_SPACE] and shoot_ticker == 0):
-            Sound.play_sound("shoot")
-            shoot_ticker = SHOOT_TICKER_MAX
-            bullet_x = (int)(((player.drawable.rect.x * 2) + player.drawable.sprite.get_width() - BULLET_SPRITE[0].get_width()) / 2)
-            bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE[0].get_height() / 2)
-            bullet = Drawable(BULLET_SPRITE, bullet_x, bullet_y)
-            bullets.append(bullet)
+            #bullet generation logic
+            if(keys[K_SPACE] and shoot_ticker == 0):
+                Sound.play_sound("shoot")
+                shoot_ticker = SHOOT_TICKER_MAX
+                bullet_x = (int)(((player.drawable.rect.x * 2) + player.drawable.sprite.get_width() - BULLET_SPRITE[0].get_width()) / 2)
+                bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE[0].get_height() / 2)
+                bullet = Drawable(BULLET_SPRITE, bullet_x, bullet_y)
+                bullets.append(bullet)
+                
             
-        
-        for bullet in bullets:
-            bullet.rect.y -= BULLET_SPEED
-            if(bullet.rect.y < 0 - bullet.sprite.get_height()):
-                bullets.remove(bullet)
-            else:
-                for enemy in enemies:
-                    if(bullet.rect.colliderect(enemy.drawable.rect)):
-                        if(bullet in bullets):
-                            bullets.remove(bullet)
-                        if(enemy.take_damage(1)):
-                            if(enemy.e_type == "cb" or enemy.e_type == "vb"):
-                                Sound.play_sound("smallexplode")
-                                points += 100
-                            else:
-                                Sound.play_sound("allydamage")
-                                points -= 100
-                                if(points < 0): points = 0
-            DISPLAYSURF.blit(bullet.sprite, bullet.rect)
+            for bullet in bullets:
+                bullet.rect.y -= BULLET_SPEED
+                if(bullet.rect.y < 0 - bullet.sprite.get_height()):
+                    bullets.remove(bullet)
+                else:
+                    for enemy in enemies:
+                        if(bullet.rect.colliderect(enemy.drawable.rect)):
+                            if(bullet in bullets):
+                                bullets.remove(bullet)
+                            if(enemy.take_damage(1)):
+                                if(enemy.e_type == "cb" or enemy.e_type == "vb"):
+                                    Sound.play_sound("smallexplode")
+                                    points += 100
+                                else:
+                                    Sound.play_sound("allydamage")
+                                    points -= 100
+                                    if(points < 0): points = 0
+                DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
-        #level generation logic
-        if(level_index < len(LEVELS)):
+            #level generation logic
             #level increment logic
             if(current_level_line >= len(current_level) and not drawables):
                 tick_counter = -30
                 current_level_line = 0
-                level_index += 1
-                if(level_index < len(LEVELS)):
-                    current_level = LEVELS[level_index]
+                level += 1
+                if(level <= len(LEVELS)):
+                    current_level = LEVELS[level-1]
+                    player.heal_player()
                 else:
                     current_level = ['']
-                player.heal_player()
-                #implement you win screen
+                    Sound.stop_sound("level")
+                    Sound.play_sound("win")
+                    you_win = True
             if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(current_level)):
                 tick_counter = 0
                 if(pause_counter == 0):
@@ -231,28 +278,42 @@ def main():
                     pause_counter -= 1
             else:
                 tick_counter += 1
-        #enemy collision
-        for enemy in enemies:
-            enemy.update()
-            if(player.drawable.rect.colliderect(enemy.drawable.rect)):
-                if(enemy.e_type == "cb"):
-                    if(player.damage_counter <= 0):
-                        points += 50
-                    if(player.take_damage(1)):
-                        game_over = True
-                elif(enemy.e_type == "vb"):
-                    if(player.take_damage(1)):
-                        game_over = True
-                elif(player.damage_counter <= 0):
-                    points -= 100
-                    if(points < 0): points = 0
-                    player.take_damage(0)
-                enemy.take_damage(enemy.health)
-            if(enemy.health < 0):
-                drawables.remove(enemy.drawable)
-                enemies.remove(enemy)
-            if(enemy.drawable.rect.y > DISPLAYHEIGHT and enemy in enemies):
-                enemies.remove(enemy)
+            
+            #enemy collision
+            for enemy in enemies:
+                enemy.update()
+                if(player.drawable.rect.colliderect(enemy.drawable.rect) and not enemy.dying):
+                    if(enemy.e_type == "cb"):
+                        if(player.damage_counter <= 0):
+                            enemy.take_damage(enemy.health)
+                            points += 50
+                        if(player.take_damage(1)):
+                            game_over = True
+                    elif(enemy.e_type == "vb"):
+                        enemy.take_damage(enemy.health)
+                        if(player.take_damage(1)):
+                            game_over = True
+                    elif(player.damage_counter <= 0):
+                        points -= 100
+                        if(points < 0): points = 0
+                        player.take_damage(0)
+                        enemy.take_damage(enemy.health)
+                if(enemy.health < 0):
+                    drawables.remove(enemy.drawable)
+                    enemies.remove(enemy)
+                if(enemy.drawable.rect.y > DISPLAYHEIGHT and enemy in enemies):
+                    enemies.remove(enemy)
+        else:
+            keys = pygame.key.get_pressed()
+            if(keys[K_SPACE] or keys[K_RETURN] or keys[K_ESCAPE]):
+                player.reset_position()
+                game_over = False
+                you_win = False
+                level = 1
+                score = 0
+                drawables = []
+                enemies = []
+                main()
 
         for drawable in drawables:
             if(drawable.rect.y > DISPLAYHEIGHT):
@@ -260,7 +321,8 @@ def main():
             else:
                 DISPLAYSURF.blit(drawable.sprite, drawable.rect)
         
-        DISPLAYSURF.blit(player.drawable.sprite, player.drawable.rect)
+        if(player.damage_counter % 2 == 0):
+            DISPLAYSURF.blit(player.drawable.sprite, player.drawable.rect)
 
         if shoot_ticker > 0:
             shoot_ticker -= 1
