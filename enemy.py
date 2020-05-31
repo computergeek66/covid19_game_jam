@@ -86,13 +86,13 @@ class Enemy:
     def take_damage(self, damage):
         self.dead = False
         
+        if(self.health > 0):
+            self.health -= damage
         if(self.health <= 0):
             self.dead = True
             if(self.e_type != "vb"):
                 self.dying = True
                 self.drawable.initialize_animation(5,0)
-        else:
-            self.health -= damage
         return self.dead
             
 
