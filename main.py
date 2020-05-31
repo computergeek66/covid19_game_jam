@@ -148,7 +148,7 @@ def main():
 
         #draw background tiles
         for bg_tile in bg_tiles:
-            bg_tile.rect.y += 7
+            bg_tile.rect.y += 15
             if(bg_tile.rect.y > DISPLAYHEIGHT):
                 bg_tile.rect.y = -bg_tile.sprite.get_height()
                 bg_tile.rect.x = random.randrange(PLAYWIDTH)

@@ -50,3 +50,4 @@ class Player:
     
     def heal_player(self):
         self.health = MAX_HEALTH
+        self.drawable.sprite.fill((255,255,255), special_flags=pygame.BLEND_ADD)
