@@ -43,3 +43,6 @@ class Player:
             else:
                 Sound.play_sound("playerdamage")
         return dead
+    
+    def heal_player(self):
+        self.health = MAX_HEALTH

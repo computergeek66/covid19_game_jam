@@ -176,7 +176,8 @@ def main():
             else:
                 for enemy in enemies:
                     if(bullet.rect.colliderect(enemy.drawable.rect)):
-                        bullets.remove(bullet)
+                        if(bullet in bullets):
+                            bullets.remove(bullet)
                         if(enemy.take_damage(1)):
                             if(enemy.e_type == "cb" or enemy.e_type == "vb"):
                                 Sound.play_sound("smallexplode")
@@ -199,6 +200,7 @@ def main():
                     current_level = LEVELS[level_index]
                 else:
                     current_level = ['']
+                player.heal_player()
                 #implement you win screen
             if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(current_level)):
                 tick_counter = 0
