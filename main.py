@@ -192,7 +192,7 @@ def main():
         #level generation logic
         if(level_index < len(LEVELS)):
             #level increment logic
-            if(current_level_line >= len(current_level)):
+            if(current_level_line >= len(current_level) and not drawables):
                 tick_counter = -30
                 current_level_line = 0
                 level_index += 1
@@ -244,10 +244,14 @@ def main():
             if(enemy.health < 0):
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
-                
+            if(enemy.drawable.rect.y > DISPLAYHEIGHT and enemy in enemies):
+                enemies.remove(enemy)
 
         for drawable in drawables:
-            DISPLAYSURF.blit(drawable.sprite, drawable.rect)
+            if(drawable.rect.y > DISPLAYHEIGHT):
+                drawables.remove(drawable)
+            else:
+                DISPLAYSURF.blit(drawable.sprite, drawable.rect)
 
         if shoot_ticker > 0:
             shoot_ticker -= 1
