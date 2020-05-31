@@ -233,15 +233,19 @@ def main():
 
         for enemy in enemies:
             enemy.update()
-            if(not enemy.dying):
-                if(player.drawable.rect.colliderect(enemy.drawable.rect)):
-                    if(enemy.e_type == "cb" or enemy.e_type == "vb"):
+            if(player.drawable.rect.colliderect(enemy.drawable.rect)):
+                if(enemy.e_type == "cb"):
+                    if(player.damage_counter <= 0):
                         points += 50
-                        if(player.take_damage(1)):
-                            game_over = True
-                    else:
-                        points -= 100
-                    enemy.take_damage(enemy.health)
+                    if(player.take_damage(1)):
+                        game_over = True
+                elif(enemy.e_type == "vb"):
+                    if(player.take_damage(1)):
+                        game_over = True
+                elif(player.damage_counter <= 0):
+                    points -= 100
+                    player.take_damage(0)
+                enemy.take_damage(enemy.health)
             if(enemy.health < 0):
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
