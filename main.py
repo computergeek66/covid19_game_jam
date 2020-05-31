@@ -124,6 +124,8 @@ def main():
 
     global points
     global game_over
+
+    Sound.play_loop("level")
     
     create_GUI()
 

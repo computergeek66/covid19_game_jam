@@ -49,5 +49,6 @@ class Player:
         return dead
     
     def heal_player(self):
+        Sound.play_sound("heal")
         self.health = MAX_HEALTH
         self.drawable.sprite.fill((255,255,255), special_flags=pygame.BLEND_ADD)

@@ -1,6 +1,7 @@
 import pygame, sys, random
 from pygame.locals import *
 from main import *
+from sound import Sound
 
 pygame.init()
 
@@ -18,6 +19,8 @@ TITLEFONT = pygame.font.Font("fonts/slkscrb.ttf", 36)
 OPTIONFONT = pygame.font.Font("fonts/slkscr.ttf", 20)
 
 FPS = 60
+
+Sound.play_loop("menu")
 
 def credits():
     creditsDisplay = TITLEFONT.render("Developed by:", True, WHITE, BLACK)
@@ -52,7 +55,7 @@ def credits():
     while return_menu == False:
 
         DISPLAYSURF.fill(BLACK)
-        
+
         DISPLAYSURF.blit(creditsDisplay, creditsDisplayRect)
         DISPLAYSURF.blit(creditsNoah, creditsNoahRect)
         DISPLAYSURF.blit(creditsAnd, creditsAndRect)
@@ -67,6 +70,7 @@ def credits():
         keys = pygame.key.get_pressed()
 
         if keys[K_ESCAPE]:
+            Sound.play_sound("move")
             return_menu = True
 
         pygame.display.update()
@@ -116,13 +120,16 @@ def menu():
         keys = pygame.key.get_pressed()
 
         if keys[K_UP] and moveTicker < 0:
+            Sound.play_sound("move")
             if selected > 0:
                 selected -= 1
             else:
                 selected = len(optionsColorList)-1
             moveTicker = MOVETICKERMAX
 
+
         if keys[K_DOWN] and moveTicker < 0:
+            Sound.play_sound("move")
             if selected < len(optionsColorList)-1:
                 selected += 1
             else:
@@ -130,6 +137,7 @@ def menu():
             moveTicker = MOVETICKERMAX
 
         if keys[K_RETURN] and moveTicker < 0:
+            Sound.play_sound("select")
             if selected == 0:
                 print("Play game")
                 selection = "play"
@@ -168,6 +176,7 @@ def menu():
         pygame.display.update()
 
     if selection == "play":
+        Sound.stop_sound("menu")
         main()
     if selection == "credits":
         credits()
