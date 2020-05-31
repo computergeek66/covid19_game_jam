@@ -11,8 +11,8 @@ pygame.init()
 
 #constants
 FPS=60
-DISPLAYFONT = pygame.font.Font("fonts/arial.ttf", 15)
-GAMEOVERFONT = pygame.font.Font("fonts/arial.ttf", 20)
+DISPLAYFONT = pygame.font.Font("fonts/slkscr.ttf", 15)
+GAMEOVERFONT = pygame.font.Font("fonts/slkscr.ttf", 20)
 BG_SPRITES = [[pygame.image.load("sprites/background/bg1.png")],
               [pygame.image.load("sprites/background/bg2.png")],
               [pygame.image.load("sprites/background/bg3.png")],
@@ -230,7 +230,7 @@ def main():
                     pause_counter -= 1
             else:
                 tick_counter += 1
-
+        #enemy collision
         for enemy in enemies:
             enemy.update()
             if(player.drawable.rect.colliderect(enemy.drawable.rect)):
