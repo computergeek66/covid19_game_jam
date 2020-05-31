@@ -262,4 +262,3 @@ def main():
         fpsClock.tick(FPS)
 
 
-main()
