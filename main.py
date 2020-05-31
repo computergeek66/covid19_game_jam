@@ -228,8 +228,7 @@ def main():
                     points += 100
                 else:
                     points -= 100
-                drawables.remove(enemy.drawable)
-                enemies.remove(enemy)
+                enemy.take_damage(enemy.health)
             if(enemy.health < 0):
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
