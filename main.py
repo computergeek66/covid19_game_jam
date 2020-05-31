@@ -119,7 +119,8 @@ def main():
     pause_counter = 0
     tick_counter = 0
     current_level_line = 0
-    current_level = LEVEL1
+    level_index = 0
+    current_level = LEVELS[level_index]
 
     global points
     global game_over
@@ -188,36 +189,45 @@ def main():
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
         #level generation logic
-        if(current_level_line >= len(current_level)): 
-            current_level_line = 0
-        if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(current_level)):
-            tick_counter = 0
-            if(pause_counter == 0):
-                #parse line
-                line = list(current_level[current_level_line])
-                if(line[0] == 'P'):
-                    pause_counter = int(line[1])
+        if(level_index < len(LEVELS)):
+            #level increment logic
+            if(current_level_line >= len(current_level)):
+                tick_counter = -30
+                current_level_line = 0
+                level_index += 1
+                if(level_index < len(LEVELS)):
+                    current_level = LEVELS[level_index]
                 else:
-                    for i in range(len(line)):
-                        enemy_type = ""
-                        if(line[i] == 'R'):
-                            enemy_type = "rb"
-                        if(line[i] == 'W'):
-                            enemy_type = "wb"
-                        if(line[i] == 'C'):
-                            enemy_type = "cb"
-                        if(line[i] == 'V'):
-                            enemy_type = "vb"
-                        if(enemy_type != ""):
-                            enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), -64, PLAYWIDTH)
-                            enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
-                            drawables.append(enemy.drawable)
-                            enemies.append(enemy)
-                current_level_line += 1
+                    current_level = ['']
+                #implement you win screen
+            if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(current_level)):
+                tick_counter = 0
+                if(pause_counter == 0):
+                    #parse line
+                    line = list(current_level[current_level_line])
+                    if(line[0] == 'P'):
+                        pause_counter = int(line[1])
+                    else:
+                        for i in range(len(line)):
+                            enemy_type = ""
+                            if(line[i] == 'R'):
+                                enemy_type = "rb"
+                            if(line[i] == 'W'):
+                                enemy_type = "wb"
+                            if(line[i] == 'C'):
+                                enemy_type = "cb"
+                            if(line[i] == 'V'):
+                                enemy_type = "vb"
+                            if(enemy_type != ""):
+                                enemy = Enemy(enemy_type, (int)(PLAYWIDTH / (len(line) + 1)) * (i + 1), -64, PLAYWIDTH)
+                                enemy.drawable.rect.x -= (int)(enemy.drawable.sprite.get_width() / 2)
+                                drawables.append(enemy.drawable)
+                                enemies.append(enemy)
+                    current_level_line += 1
+                else:
+                    pause_counter -= 1
             else:
-                pause_counter -= 1
-        else:
-            tick_counter += 1
+                tick_counter += 1
 
         for enemy in enemies:
             enemy.update()
