@@ -35,6 +35,10 @@ class Player:
         if(self.damage_counter <= 0):
             self.damage_counter = DAMAGE_COUNTER_MAX
             self.health -= damage
+            self.rstep = (int)((255-32)/MAX_HEALTH)
+            self.gstep = (int)((255-205)/MAX_HEALTH)
+            self.bstep = (int)((255-32)/MAX_HEALTH)
+            self.drawable.sprite.fill((self.rstep,self.gstep,self.bstep), special_flags=pygame.BLEND_SUB)
             if(self.health <= 0):
                 Sound.play_sound("death")
                 dead = True
@@ -46,3 +50,4 @@ class Player:
     
     def heal_player(self):
         self.health = MAX_HEALTH
+        self.drawable.sprite.fill((255,255,255), special_flags=pygame.BLEND_ADD)
