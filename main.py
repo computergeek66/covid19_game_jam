@@ -157,7 +157,7 @@ def main():
         #detect player movement
         keys = pygame.key.get_pressed()
         player.move_player(keys)
-        DISPLAYSURF.blit(player.drawable.sprite, player.drawable.rect)
+        
 
         #bullet generation logic
         if(keys[K_SPACE] and shoot_ticker == 0):
@@ -185,8 +185,7 @@ def main():
                             else:
                                 Sound.play_sound("allydamage")
                                 points -= 100
-                            
-                            
+                                if(points < 0): points = 0
             DISPLAYSURF.blit(bullet.sprite, bullet.rect)
 
         #level generation logic
@@ -244,6 +243,7 @@ def main():
                         game_over = True
                 elif(player.damage_counter <= 0):
                     points -= 100
+                    if(points < 0): points = 0
                     player.take_damage(0)
                 enemy.take_damage(enemy.health)
             if(enemy.health < 0):
@@ -257,6 +257,8 @@ def main():
                 drawables.remove(drawable)
             else:
                 DISPLAYSURF.blit(drawable.sprite, drawable.rect)
+        
+        DISPLAYSURF.blit(player.drawable.sprite, player.drawable.rect)
 
         if shoot_ticker > 0:
             shoot_ticker -= 1
