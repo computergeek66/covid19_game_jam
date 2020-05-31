@@ -4,14 +4,15 @@ from drawable import Drawable
 from sound import Sound
 
 #constants
-PLAYER_SPRITE = "sprites/player.png"
+PLAYER_SPRITE = [pygame.image.load("sprites/player.png"),
+                 pygame.image.load("sprites/player.png")]
 PLAYER_SPEED = 7
 MAX_HEALTH = 10
 DAMAGE_COUNTER_MAX = 60
 
 class Player:
     def __init__(self, displayWidth, displayHeight):
-        self.drawable = Drawable(pygame.image.load(PLAYER_SPRITE), (int)(0.5 * displayWidth), (int)(0.8 * displayHeight))
+        self.drawable = Drawable(PLAYER_SPRITE, (int)(0.5 * displayWidth), (int)(0.8 * displayHeight))
         self.displayWidth = displayWidth
         self.displayHeight = displayHeight
         self.health = MAX_HEALTH

@@ -13,10 +13,10 @@ pygame.init()
 FPS=60
 DISPLAYFONT = pygame.font.Font("fonts/arial.ttf", 15)
 GAMEOVERFONT = pygame.font.Font("fonts/arial.ttf", 20)
-BG_SPRITES = [pygame.image.load("sprites/background/bg1.png"),
-              pygame.image.load("sprites/background/bg2.png"),
-              pygame.image.load("sprites/background/bg3.png"),
-              pygame.image.load("sprites/background/bg4.png")]
+BG_SPRITES = [[pygame.image.load("sprites/background/bg1.png")],
+              [pygame.image.load("sprites/background/bg2.png")],
+              [pygame.image.load("sprites/background/bg3.png")],
+              [pygame.image.load("sprites/background/bg4.png")]]
 DISPLAYSURF = pygame.display.set_mode((550, 600))
 DISPLAYHEIGHT = DISPLAYSURF.get_height()
 DISPLAYWIDTH = DISPLAYSURF.get_width()
@@ -25,7 +25,7 @@ PLAYWIDTH = DISPLAYWIDTH - GUIWIDTH
 BG_COLOR = (140, 0, 21)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-BULLET_SPRITE = pygame.image.load("sprites/bullet.png")
+BULLET_SPRITE = [pygame.image.load("sprites/bullet.png")]
 BULLET_SPEED = 12
 SHOOT_TICKER_MAX = 30
 TICK_COUNTER_MAX = 30
@@ -162,8 +162,8 @@ def main():
         if(keys[K_SPACE] and shoot_ticker == 0):
             Sound.play_sound("shoot")
             shoot_ticker = SHOOT_TICKER_MAX
-            bullet_x = (int)(((player.drawable.rect.x * 2) + player.drawable.sprite.get_width() - BULLET_SPRITE.get_width()) / 2)
-            bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE.get_height() / 2)
+            bullet_x = (int)(((player.drawable.rect.x * 2) + player.drawable.sprite.get_width() - BULLET_SPRITE[0].get_width()) / 2)
+            bullet_y = player.drawable.rect.y - (int)(BULLET_SPRITE[0].get_height() / 2)
             bullet = Drawable(BULLET_SPRITE, bullet_x, bullet_y)
             bullets.append(bullet)
             

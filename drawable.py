@@ -1,19 +1,14 @@
 class Drawable:
-    def __init__(self, sprite, x, y):
-        self.sprite = sprite
-        self.rect = sprite.get_bounding_rect()
+    def __init__(self, sprites, x, y):
+        self.sprites = sprites
+        self.sprite = self.sprites[0]
+        self.rect = self.sprite.get_bounding_rect()
         self.rect.x = x
         self.rect.y = y
-        
-
-    @classmethod
-    def animated_drawable(self, sprite, sprites, x, y):
-        self.sprites = sprites
-        self.rect = sprite.get_bounding_rect()
         self.sprite_index = 0
         self.duration = 0
-        self.countdown = 0
-        return self(sprite, x, y)
+        self.countdown = 0        
+
 
     def initialize_animation(self, duration, start_time):
         self.duration = duration

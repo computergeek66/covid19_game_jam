@@ -41,14 +41,14 @@ class Enemy:
             self.sprites = RB_SPRITES
             self.sprite = self.sprites[0]
             self.speed = 5
-            self.drawable = Drawable.animated_drawable(self.sprite, self.sprites, x, y)
+            self.drawable = Drawable( self.sprites, x, y)
             self.health = 2
 
         if(self.e_type == "wb"):
             self.sprites = WB_DEATH
             self.sprite = self.sprites[0]
             self.speed = 6
-            self.drawable = Drawable.animated_drawable(self.sprite, self.sprites, x, y)
+            self.drawable = Drawable(self.sprites, x, y)
             
             self.health = 1
 
@@ -56,14 +56,14 @@ class Enemy:
             self.sprites = CB_SPRITES
             self.sprite = self.sprites[0]
             self.speed = 4
-            self.drawable = Drawable.animated_drawable(self.sprite, self.sprites, x, y)
+            self.drawable = Drawable(self.sprites, x, y)
             self.health = 1
 
         if(self.e_type == "vb"):
             self.sprites = VB_SPRITES
             self.sprite = self.sprites[0]
             self.speed = 4+random.uniform(-1.5, 2)
-            self.drawable = Drawable.animated_drawable(self.sprite, self.sprites, x, y)
+            self.drawable = Drawable(self.sprites, x, y)
             self.drawable.initialize_animation(5,0)
             self.health = 99
 
