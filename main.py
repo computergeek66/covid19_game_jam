@@ -176,7 +176,8 @@ def main():
             else:
                 for enemy in enemies:
                     if(bullet.rect.colliderect(enemy.drawable.rect)):
-                        bullets.remove(bullet)
+                        if(bullet in bullets):
+                            bullets.remove(bullet)
                         if(enemy.take_damage(1)):
                             if(enemy.e_type == "cb" or enemy.e_type == "vb"):
                                 Sound.play_sound("smallexplode")
@@ -191,7 +192,7 @@ def main():
         #level generation logic
         if(level_index < len(LEVELS)):
             #level increment logic
-            if(current_level_line >= len(current_level)):
+            if(current_level_line >= len(current_level) and not drawables):
                 tick_counter = -30
                 current_level_line = 0
                 level_index += 1
@@ -199,6 +200,7 @@ def main():
                     current_level = LEVELS[level_index]
                 else:
                     current_level = ['']
+                player.heal_player()
                 #implement you win screen
             if(tick_counter == TICK_COUNTER_MAX and current_level_line < len(current_level)):
                 tick_counter = 0
@@ -242,10 +244,14 @@ def main():
             if(enemy.health < 0):
                 drawables.remove(enemy.drawable)
                 enemies.remove(enemy)
-                
+            if(enemy.drawable.rect.y > DISPLAYHEIGHT and enemy in enemies):
+                enemies.remove(enemy)
 
         for drawable in drawables:
-            DISPLAYSURF.blit(drawable.sprite, drawable.rect)
+            if(drawable.rect.y > DISPLAYHEIGHT):
+                drawables.remove(drawable)
+            else:
+                DISPLAYSURF.blit(drawable.sprite, drawable.rect)
 
         if shoot_ticker > 0:
             shoot_ticker -= 1
